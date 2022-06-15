@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="AutoGetReferencedAddinSetup" Language="1033" Version="1.0.0.0" Manufacturer="Jim Sculley" UpgradeCode="d287eea2-71ad-42c6-a7bb-7680063b9dfc">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
+    <UIRef Id="WixUI_InstallDir" />
+		<UIRef Id="WixUI_Common" />
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="Resources\eula.rtf" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes"/>
+
+    <Feature Id="ProductFeature" Title="AutoGetReferencedAddinSetup" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+  </Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFiles64Folder">
+				<Directory Id="INSTALLFOLDER" Name="AutoGetReferencedAddin" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			<!-- </Component> -->
+      <Component Id="Reg" Guid="{74FA0891-A26F-435E-B72A-672BC0E4406A}">
+        <RegistryValue Root="HKCU" Key="Software\SolidWorks\AddInsStartup\{D6A460EB-A364-48AD-B7DF-880754DF5477}" Value="1" Type="integer" Action="write" />
+        <RegistryValue Root="HKLM" Key="Software\SolidWorks\Addins\{D6A460EB-A364-48AD-B7DF-880754DF5477}" Value="0" Type="integer" Action="write" />
+        <RegistryValue Root="HKLM" Key="Software\SolidWorks\Addins\{D6A460EB-A364-48AD-B7DF-880754DF5477}" Name="Description" Value="Automatically get referenced versions of files" Type="string" Action="write" />
+        <RegistryValue Root="HKLM" Key="Software\SolidWorks\Addins\{D6A460EB-A364-48AD-B7DF-880754DF5477}" Name="Title" Value="AutoGet Referenced File Versions" Type="string" Action="write" />
+      </Component>
+      <!--Component Id="interops" Guid="{3DD35DCF-3072-45B6-8767-D2D88B2549C0}">
+        <File Id='SolidWorks.Interop.sldworks.dllID' Name='SolidWorks.Interop.sldworks.dll' Source ='$(var.SourceOutDir)\SolidWorks.Interop.sldworks.dll'/>
+        <File Id='SolidWorks.Interop.swconst.dllID' Name='SolidWorks.Interop.swconst.dll' Source ='$(var.SourceOutDir)\SolidWorks.Interop.swconst.dll'/>
+        <File Id='SolidWorks.Interop.swpublished.dllID' Name='SolidWorks.Interop.swpublished.dll' Source ='$(var.SourceOutDir)\SolidWorks.Interop.swpublished.dll'/>
+        <File Id='SolidWorksTools.dllID' Name='SolidWorksTools.dll' Source ='$(var.SourceOutDir)\SolidWorksTools.dll'/>
+      </Component-->
+		</ComponentGroup>
+	</Fragment>
+</Wix>
