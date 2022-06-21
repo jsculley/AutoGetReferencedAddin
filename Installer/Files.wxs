@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="APPLICATIONFOLDER">
+            <Component Id="cmpE48C2ED537076B5EF8438BC29D176E25" Guid="*">
+                <File Id="fil6E75DAFDEC241A58293576EC4639DAFB" KeyPath="yes" Source="$(var.SourceOutDir)\AutoGetReferencedAddin.dll" />
+            </Component>
+            <Component Id="cmp628EE0842895A3675E31719E51924686" Guid="*">
+                <File Id="fil9E0DC4A6729CCA041FC73CC6312835AB" KeyPath="yes" Source="$(var.SourceOutDir)\solidworkstools.dll" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="FilesRegGroup">
+            <ComponentRef Id="cmpE48C2ED537076B5EF8438BC29D176E25" />
+            <ComponentRef Id="cmp628EE0842895A3675E31719E51924686" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>
