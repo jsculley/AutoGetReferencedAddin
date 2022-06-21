@@ -147,7 +147,6 @@ namespace org.duckdns.buttercup.autogetreferenced
             //Setup callbacks
             swApp.SetAddinCallbackInfo(0, this, addinID);
 
-
             #region Setup the Event Handlers
             SwEventPtr = (SldWorks.SldWorks)swApp;
             AttachEventHandlers();
