@@ -20,7 +20,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>SourceOutDir=..\AutoGetReferencedAddin\bin\$(Platform)\$(Configuration)</DefineConstants>
+    <DefineConstants>SourceOutDir=..\AutoGetReferencedAddin\bin\$(Configuration)</DefineConstants>
     <CompilerAdditionalOptions>
     </CompilerAdditionalOptions>
   </PropertyGroup>
