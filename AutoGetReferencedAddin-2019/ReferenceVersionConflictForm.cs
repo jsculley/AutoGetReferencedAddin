@@ -1,9 +1,8 @@
-﻿using System;
+﻿using SldWorks = SolidWorks.Interop.sldworks;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
-
-using SldWorks;
 
 namespace org.duckdns.buttercup.autogetreferenced
 {
@@ -42,8 +41,8 @@ namespace org.duckdns.buttercup.autogetreferenced
             if (isOpenInSolidWorks(path))
             {
                 object[] openDocObjArray = swApp.GetDocuments() as object[];
-                ModelDoc2[] openDocs = Array.ConvertAll(openDocObjArray, item => (ModelDoc2)item);
-                foreach (ModelDoc2 mDoc in openDocs)
+                SldWorks.ModelDoc2[] openDocs = Array.ConvertAll(openDocObjArray, item => (SldWorks.ModelDoc2)item);
+                foreach (SldWorks.ModelDoc2 mDoc in openDocs)
                 {
                     if (mDoc.GetPathName().Equals(openingFile)) { continue; }
                     if (mDoc.GetPathName().Equals(path))
@@ -63,7 +62,7 @@ namespace org.duckdns.buttercup.autogetreferenced
                                 paths.Add(refData[i + 1]);
                             }
                         }
-                        if (paths.Contains(path)) 
+                        if (paths.Contains(path))
                         {
                             refDocPaths.Add(mDoc.GetPathName());
                         }
@@ -76,7 +75,7 @@ namespace org.duckdns.buttercup.autogetreferenced
         private bool isOpenInSolidWorks(string path)
         {
             object[] openDocObjArray = swApp.GetDocuments() as object[];
-            ModelDoc2[] openDocs = Array.ConvertAll(openDocObjArray, item => (ModelDoc2)item);
+            SldWorks.ModelDoc2[] openDocs = Array.ConvertAll(openDocObjArray, item => (SldWorks.ModelDoc2)item);
             return Array.Find(openDocs, e => e.GetPathName().Equals(path)) != null;
         }
 

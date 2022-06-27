@@ -27,11 +27,11 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-using EdmLib;
+using EdmLib = EPDM.Interop.epdm;
 
-using SldWorks;
+using SldWorks = SolidWorks.Interop.sldworks;
 using SolidWorksTools;
-using SWPublished;
+using SWPublished = SolidWorks.Interop.swpublished;
 
 namespace org.duckdns.buttercup.autogetreferenced
 {
@@ -41,13 +41,13 @@ namespace org.duckdns.buttercup.autogetreferenced
         Title = "AutoGet Referenced File Versions",
         LoadAtStartup = true
         )]
-    public sealed class AutoGetReferencedAddin : ISwAddin
+    public sealed class AutoGetReferencedAddin : SWPublished.ISwAddin
     {
         #region Private Variables
         /// <summary>
         /// The SOLIDWORKS application instance
         /// </summary>
-        private ISldWorks swApp = null;
+        private SldWorks.ISldWorks swApp = null;
         /// <summary>
         /// The cookie supplied to the add-in by SOLIDWORKS
         /// </summary>
@@ -55,7 +55,7 @@ namespace org.duckdns.buttercup.autogetreferenced
         /// <summary>
         /// The EPDM vaults where this add-in is active
         /// </summary>
-        private Dictionary<String, IEdmVault21> connectedVaults = new Dictionary<string, IEdmVault21>();
+        private Dictionary<String, EdmLib.IEdmVault21> connectedVaults = new Dictionary<string, EdmLib.IEdmVault21>();
         #endregion
 
         #region Event Handler Variables
@@ -139,9 +139,9 @@ namespace org.duckdns.buttercup.autogetreferenced
         #endregion
 
         #region Boilerplate SOLIDWORKS add-in code
-        bool ISwAddin.ConnectToSW(object ThisSW, int cookie)
+        bool SWPublished.ISwAddin.ConnectToSW(object ThisSW, int cookie)
         {
-            swApp = (ISldWorks)ThisSW;
+            swApp = (SldWorks.ISldWorks)ThisSW;
             addinID = cookie;
 
             //Setup callbacks
@@ -162,7 +162,7 @@ namespace org.duckdns.buttercup.autogetreferenced
             return 0;
         }
 
-        bool ISwAddin.DisconnectFromSW()
+        bool SWPublished.ISwAddin.DisconnectFromSW()
         {
             DetachEventHandlers();
 
@@ -226,13 +226,13 @@ namespace org.duckdns.buttercup.autogetreferenced
             string[] directories = pathToFileOpening.Split(Path.DirectorySeparatorChar);
             string vaultName = directories[1];
             if (!connectedVaults.ContainsKey(vaultName)) { return 0; } //We're not connected to this vault
-            IEdmVault21 vault = connectedVaults[vaultName];
-            IEdmFile17 fileOpening = vault.GetFileFromPath(pathToFileOpening, out IEdmFolder5 vaultFolder) as IEdmFile17;
-            IEdmBatchGet batchGet = vault.CreateUtility(EdmUtility.EdmUtil_BatchGet);
-            batchGet.AddSelectionEx((EdmVault5)vault, fileOpening.ID, vaultFolder.ID, 0);
-            EdmGetCmdFlags options =
-                EdmGetCmdFlags.Egcf_AsBuilt |
-                EdmGetCmdFlags.Egcf_SkipOpenFileChecks;
+            EdmLib.IEdmVault21 vault = connectedVaults[vaultName];
+            EdmLib.IEdmFile17 fileOpening = vault.GetFileFromPath(pathToFileOpening, out EdmLib.IEdmFolder5 vaultFolder) as EdmLib.IEdmFile17;
+            EdmLib.IEdmBatchGet batchGet = vault.CreateUtility(EdmLib.EdmUtility.EdmUtil_BatchGet);
+            batchGet.AddSelectionEx((EdmLib.EdmVault5)vault, fileOpening.ID, vaultFolder.ID, 0);
+            EdmLib.EdmGetCmdFlags options =
+                EdmLib.EdmGetCmdFlags.Egcf_AsBuilt |
+                EdmLib.EdmGetCmdFlags.Egcf_SkipOpenFileChecks;
             batchGet.CreateTree(0, (int)options);
             if (batchGet.FileCount <= 1) { return 0; } //No referenced files, so just return
             if (Properties.Settings.Default.ShowGetDialog)
@@ -240,7 +240,7 @@ namespace org.duckdns.buttercup.autogetreferenced
                 batchGet.ShowDlg(0);
             }
             batchGet.GetFiles(0, null);
-            IEdmSelectionList6 filesMarkedToGet = batchGet.GetFileList((int)EdmGetFileListFlag.Egflf_GetRetrieved) as IEdmSelectionList6;
+            EdmLib.IEdmSelectionList6 filesMarkedToGet = batchGet.GetFileList((int)EdmLib.EdmGetFileListFlag.Egflf_GetRetrieved) as EdmLib.IEdmSelectionList6;
             List<VersionConflictInfo> versionConflicts = getVersionConflicts(vault, filesMarkedToGet);
             if (versionConflicts.Count == 0) {  return 0; } //No conflicts, just return
             DialogResult dr = new ReferenceVersionConflictForm(versionConflicts, Path.GetFileName(pathToFileOpening), swApp).ShowDialog();
@@ -285,7 +285,7 @@ namespace org.duckdns.buttercup.autogetreferenced
             {
                 try
                 {
-                    IEdmVault21 nextVault = new EdmVault5() as IEdmVault21;
+                    EdmLib.IEdmVault21 nextVault = new EdmLib.EdmVault5() as EdmLib.IEdmVault21;
                     nextVault.LoginAuto(s, 0);
                     connectedVaults.Add(nextVault.Name, nextVault);
                 }
@@ -303,14 +303,14 @@ namespace org.duckdns.buttercup.autogetreferenced
         /// <param name="vault">the vault from which the files are to be retrieved</param>
         /// <param name="filesMarkedToGet">the list of files marked to 'get'</param>
         /// <returns>a list of <see cref="VersionConflictInfo"/> objects</returns>
-        private List<VersionConflictInfo> getVersionConflicts(IEdmVault21 vault, IEdmSelectionList6 filesMarkedToGet)
+        private List<VersionConflictInfo> getVersionConflicts(EdmLib.IEdmVault21 vault, EdmLib.IEdmSelectionList6 filesMarkedToGet)
         {
             List<VersionConflictInfo> versionConflicts = new List<VersionConflictInfo>();
-            IEdmPos5 pos = filesMarkedToGet.GetHeadPosition();
+            EdmLib.IEdmPos5 pos = filesMarkedToGet.GetHeadPosition();
             while (!pos.IsNull)
             {
-                filesMarkedToGet.GetNext2(pos, out EdmSelectionObject selection);
-                IEdmFile17 retrievedFile = vault.GetObject(EdmObjectType.EdmObject_File, selection.mlID) as IEdmFile17;
+                filesMarkedToGet.GetNext2(pos, out EdmLib.EdmSelectionObject selection);
+                EdmLib.IEdmFile17 retrievedFile = vault.GetObject(EdmLib.EdmObjectType.EdmObject_File, selection.mlID) as EdmLib.IEdmFile17;
                 int localVersion = retrievedFile.GetLocalVersionNo2(selection.mbsPath, out bool obsolete);
                 if (localVersion != selection.mlGetVersion)
                 {

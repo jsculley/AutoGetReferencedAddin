@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="AutoGetReferenced Addin" Language="1033" Version="!(bind.FileVersion.fil6E75DAFDEC241A58293576EC4639DAFB)" Manufacturer="Jim Sculley" UpgradeCode="b2017f98-28b3-4292-8240-fcfc930da035">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+    <UIRef Id="WixUI_Advanced" />
+    <UIRef Id="WixUI_Common" />
+    <!-->Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" /-->
+    <Property Id="ApplicationFolderName" Value="AutoGetReferenced Add-In" />
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+    <WixVariable Id="WixUILicenseRtf" Value="Resources\eula.rtf" />
+    
+		<Feature Id="ProductFeature" Title="AutoGetReferenced Addin" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="FilesRegGroup" />      
+		</Feature>
+    <Feature Id="SourceFeature" Title ="Source Code" Level = "2">
+      <ComponentGroupRef Id="SourceComponents" />
+    </Feature>
+    <SetDirectory Id="APPLICATIONFOLDER" Value="[ProgramFiles64Folder][ApplicationFolderName]">APPLICATIONFOLDER=""</SetDirectory>
+    <CustomAction
+          Id="OverwriteWixSetDefaultPerMachineFolder"
+          Property="WixPerMachineFolder"
+          Value="[APPLICATIONFOLDER]"
+          Execute="immediate"
+/>
+
+    <CustomAction
+        Id="SetARPINSTALLLOCATION"
+        Property="ARPINSTALLLOCATION"
+        Value="[APPLICATIONFOLDER]"
+/>
+
+    <InstallUISequence>
+      <Custom Action="OverwriteWixSetDefaultPerMachineFolder" After="WixSetDefaultPerMachineFolder" />
+    </InstallUISequence>
+
+    <InstallExecuteSequence>
+      <Custom Action="OverwriteWixSetDefaultPerMachineFolder" After="WixSetDefaultPerMachineFolder" />
+      <Custom Action="SetARPINSTALLLOCATION" After="InstallValidate"/>
+    </InstallExecuteSequence>
+  </Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFiles64Folder">
+        <Directory Id="APPLICATIONFOLDER" Name="AutoGetReferencedAddin">
+          <Directory Id="SRCFOLDER" Name="src" />
+        </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+	<Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="APPLICATIONFOLDER">
+      <Component Id="Reg" Guid="{74FA0891-A26F-435E-B72A-672BC0E4406A}">
+        <RegistryValue Root="HKMU" Key="Software\SolidWorks\AddInsStartup\{D6A460EB-A364-48AD-B7DF-880754DF5477}" Value="1" Type="integer" Action="write" />
+        <RegistryValue Root="HKLM" Key="Software\SolidWorks\Addins\{D6A460EB-A364-48AD-B7DF-880754DF5477}" Value="0" Type="integer" Action="write" />
+        <RegistryValue Root="HKLM" Key="Software\SolidWorks\Addins\{D6A460EB-A364-48AD-B7DF-880754DF5477}" Name="Description" Value="Automatically get referenced versions of files" Type="string" Action="write" />
+        <RegistryValue Root="HKLM" Key="Software\SolidWorks\Addins\{D6A460EB-A364-48AD-B7DF-880754DF5477}" Name="Title" Value="AutoGet Referenced File Versions" Type="string" Action="write" />
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="SourceComponents" Directory="SRCFOLDER">
+      <Component Id="SourceCode" Guid="*">
+        <File Id="SourceZIP" KeyPath="yes" Source="$(var.SourceOutDir)\src.zip" />
+      </Component>
+    </ComponentGroup>
+	</Fragment>
+</Wix>

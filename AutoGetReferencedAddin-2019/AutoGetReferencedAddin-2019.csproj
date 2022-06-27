@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FF9B65D1-33CB-4F1F-8919-FF899F2556D4}</ProjectGuid>
+    <ProjectGuid>{64EEB798-EC05-4D02-BC4F-8218D91B8418}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoGetReferencedAddin</RootNamespace>
-    <AssemblyName>AutoGetReferencedAddin</AssemblyName>
+    <RootNamespace>AutoGetReferencedAddin_2019</RootNamespace>
+    <AssemblyName>AutoGetReferencedAddin-2019</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -53,10 +53,25 @@
     <RegisterForComInterop>true</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPDM.Interop.epdm, Version=5.25.0.0, Culture=neutral, PublicKeyToken=0625a0c4bb5de148, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\EPDM.Interop.epdm.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="solidworkstools">
-      <HintPath>C:\Program Files\SolidWorks Corp\SOLIDWORKS\solidworkstools.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SolidWorks.Interop.sldworks, Version=30.2.0.46, Culture=neutral, PublicKeyToken=7c4797c3e4eeac03, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\SolidWorks.Interop.sldworks.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="SolidWorks.Interop.swpublished, Version=30.2.0.46, Culture=neutral, PublicKeyToken=89a97bdc5284e6d8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\SolidWorks.Interop.swpublished.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="solidworkstools, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bd18593873b4686d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\solidworkstools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -97,35 +112,6 @@
     <Compile Include="VersionConflictInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="EdmLib">
-      <Guid>{5FA2C692-8393-4F31-9BDB-05E6F807D0D3}</Guid>
-      <VersionMajor>5</VersionMajor>
-      <VersionMinor>25</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="SldWorks">
-      <Guid>{83A33D31-27C5-11CE-BFD4-00400513BB57}</Guid>
-      <VersionMajor>30</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="SWPublished">
-      <Guid>{C71C31CD-898C-11D4-AEF6-00C04F603FAF}</Guid>
-      <VersionMajor>30</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="AutoGetReferencedAddin.licenseheader" />
     <None Include="Properties\DataSources\VersionConflictInfo.datasource" />
@@ -148,22 +134,39 @@
       <DependentUpon>VaultSetupForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="lib\EPDM.Interop.epdm.dll" />
+    <Content Include="lib\EPDM.Interop.EPDMResultCode.dll" />
+    <Content Include="lib\SolidWorks.Interop.sldworks.dll" />
+    <Content Include="lib\SolidWorks.Interop.swpublished.dll" />
+    <Content Include="lib\solidworkstools.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  
   <!-- Create a Zip File of the Project -->
-  <ItemGroup>
-    <ZipFiles  Include="*.*" Exclude="*.zip;**\bin;**\obj;**\*.user" />
-  </ItemGroup>
   <Target Name="Zip" AfterTargets="Build">
-    <Zip Files="@(ZipFiles)" 
-         ZipFileName="$(TargetDir)src.zip" 
-         WorkingDirectory="$(SolutionDir)" />
+    <ItemGroup>
+      <ZipFiles Include="app.config" />
+      <ZipFiles Include="AutoGetReferencedAddin.cs" />
+      <ZipFiles Include="AutoGetReferencedAddin-2019.csproj" />
+      <ZipFiles Include="AutoGetReferencedAddin.licenseheader" />
+      <ZipFiles Include="FirstRun.cs" />
+      <ZipFiles Include="FirstRun.Designer.cs" />
+      <ZipFiles Include="FirstRun.resx" />
+      <ZipFiles Include="ReferenceVersionConflictForm.cs" />
+      <ZipFiles Include="ReferenceVersionConflictForm.Designer.cs" />
+      <ZipFiles Include="ReferenceVersionConflictForm.resx" />
+      <ZipFiles Include="ReferencingFilesDialog.cs" />
+      <ZipFiles Include="ReferencingFilesDialog.Designer.cs" />
+      <ZipFiles Include="ReferencingFilesDialog.resx" />
+      <ZipFiles Include="VaultSetupForm.cs" />
+      <ZipFiles Include="VaultSetupForm.Designer.cs" />
+      <ZipFiles Include="VaultSetupForm.resx" />
+      <ZipFiles Include="VersionConflictInfo.cs" />
+    </ItemGroup>
+    <Zip Files="@(ZipFiles)" ZipFileName="$(TargetDir)src.zip" WorkingDirectory="$(SolutionDir)" />
   </Target>
-  
-  
 </Project>

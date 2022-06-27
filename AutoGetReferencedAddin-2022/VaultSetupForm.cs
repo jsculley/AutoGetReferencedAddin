@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using EdmLib;
+using EdmLib = EPDM.Interop.epdm;
 
 namespace org.duckdns.buttercup.autogetreferenced
 {
@@ -22,7 +22,7 @@ namespace org.duckdns.buttercup.autogetreferenced
                 {
                     return;
                 }
-                IEdmVault5 vault = new EdmVault5();
+                EdmLib.IEdmVault5 vault = new EdmLib.EdmVault5();
                 try
                 {
                     string vaultName = Path.GetFileName(fbDialog.SelectedPath);

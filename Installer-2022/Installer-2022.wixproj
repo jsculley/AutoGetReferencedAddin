@@ -8,12 +8,12 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>AutoGetReferenced Addin Setup</OutputName>
     <OutputType>Package</OutputType>
-    <Name>Installer</Name>
+    <Name>Installer-2022</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;SourceOutDir=..\AutoGetReferencedAddin\bin\$(Configuration)</DefineConstants>
+    <DefineConstants>Debug;SourceOutDir=..\AutoGetReferencedAddin-2022\bin\$(Configuration)</DefineConstants>
     <CompilerAdditionalOptions>
     </CompilerAdditionalOptions>
   </PropertyGroup>
@@ -55,6 +55,6 @@
 	</Target>
 	-->
   <Target Name="BeforeBuild">
-    <HeatDirectory Directory="..\AutoGetReferencedAddin\bin\$(Configuration)" RunAsSeparateProcess="true" Transforms="DirectoryHeatTransform.xslt" PreprocessorVariable="var.SourceOutDir" OutputFile="Files.wxs" ComponentGroupName="FilesRegGroup" DirectoryRefId="APPLICATIONFOLDER" AutogenerateGuids="true" ToolPath="$(WixToolPath)" SuppressFragments="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" />
+    <HeatDirectory Directory="..\AutoGetReferencedAddin-2022\bin\$(Configuration)" RunAsSeparateProcess="true" Transforms="DirectoryHeatTransform.xslt" PreprocessorVariable="var.SourceOutDir" OutputFile="Files.wxs" ComponentGroupName="FilesRegGroup" DirectoryRefId="APPLICATIONFOLDER" AutogenerateGuids="true" ToolPath="$(WixToolPath)" SuppressFragments="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" />
   </Target>
 </Project>
