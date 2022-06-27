@@ -55,7 +55,7 @@ namespace org.duckdns.buttercup.autogetreferenced
         /// <summary>
         /// The EPDM vaults where this add-in is active
         /// </summary>
-        private Dictionary<String, EdmLib.IEdmVault21> connectedVaults = new Dictionary<string, EdmLib.IEdmVault21>();
+        private Dictionary<String, EdmLib.IEdmVault21> connectedVaults = new Dictionary<string, EdmLib.IEdmVault21>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         #region Event Handler Variables
