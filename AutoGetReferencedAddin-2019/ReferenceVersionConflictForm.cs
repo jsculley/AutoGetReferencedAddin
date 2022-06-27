@@ -29,7 +29,7 @@ namespace org.duckdns.buttercup.autogetreferenced
             if (conflictDataGridView.Columns[e.ColumnIndex].Name == "Details")
             {
                 string filename = conflictDataGridView.SelectedRows[0].Cells[0].Value.ToString();
-                string path = conflicts.Find(x => x.Filename.Equals(filename)).FullPath;
+                string path = conflicts.Find(x => x.Filename.Equals(filename, StringComparison.OrdinalIgnoreCase)).FullPath;
                 List<string> refDocPaths = getOpenReferencingDocumentPaths(path);
                 new ReferencingFilesDialog(filename, refDocPaths).ShowDialog();
             }
@@ -44,8 +44,8 @@ namespace org.duckdns.buttercup.autogetreferenced
                 SldWorks.ModelDoc2[] openDocs = Array.ConvertAll(openDocObjArray, item => (SldWorks.ModelDoc2)item);
                 foreach (SldWorks.ModelDoc2 mDoc in openDocs)
                 {
-                    if (mDoc.GetPathName().Equals(openingFile)) { continue; }
-                    if (mDoc.GetPathName().Equals(path))
+                    if (mDoc.GetPathName().Equals(openingFile, StringComparison.OrdinalIgnoreCase)) { continue; }
+                    if (mDoc.GetPathName().Equals(path, StringComparison.OrdinalIgnoreCase))
                     {
                         refDocPaths.Add(path);
                         continue;
@@ -76,7 +76,7 @@ namespace org.duckdns.buttercup.autogetreferenced
         {
             object[] openDocObjArray = swApp.GetDocuments() as object[];
             SldWorks.ModelDoc2[] openDocs = Array.ConvertAll(openDocObjArray, item => (SldWorks.ModelDoc2)item);
-            return Array.Find(openDocs, e => e.GetPathName().Equals(path)) != null;
+            return Array.Find(openDocs, e => e.GetPathName().Equals(path, StringComparison.OrdinalIgnoreCase)) != null;
         }
 
         private void conflictDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
