@@ -309,17 +309,19 @@ namespace org.duckdns.buttercup.autogetreferenced
             {
                 filesMarkedToGet.GetNext2(pos, out EdmLib.EdmSelectionObject selection);
                 EdmLib.IEdmFile16 retrievedFile = null;
+                int localVersion;
                 try { 
                     retrievedFile = vault.GetObject(EdmLib.EdmObjectType.EdmObject_File, selection.mlID) as EdmLib.IEdmFile16;
+                    localVersion = retrievedFile.GetLocalVersionNo2(selection.mbsPath, out bool obsolete);
                 }
                     catch (Exception)
                 {
                     //do nothing, expected error if there are virtual components or cut list items since
-                    //GetObject will throw and exception even though EdmObjectType is EdmObject_File
+                    //GetObject and GetLocalVersionNo2 will throw and exception even though EdmObjectType is EdmObject_File
                     //We can safely skiop these kinds of items
                     continue;
                 }
-            int localVersion = retrievedFile.GetLocalVersionNo2(selection.mbsPath, out bool obsolete);
+            
                 if (localVersion != selection.mlGetVersion)
                 {
                     VersionConflictInfo nextConflict = new VersionConflictInfo();
